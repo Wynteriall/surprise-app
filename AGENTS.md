@@ -1,0 +1,15 @@
+# AGENTS.md
+
+## Agent skills
+
+### Issue tracker
+
+Local markdown issues under `.scratch/`. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Default five roles as-is. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context (root `GLOSSARY.md` + `docs/adr/`). See `docs/agents/domain.md`.

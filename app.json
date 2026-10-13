@@ -1,0 +1,15 @@
+{
+  "expo": {
+    "name": "surprise-app",
+    "slug": "surprise-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "surprise-app",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
+    "plugins": ["expo-router"],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
