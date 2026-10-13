@@ -6,7 +6,6 @@
     "orientation": "portrait",
     "scheme": "surprise-app",
     "userInterfaceStyle": "dark",
-    "newArchEnabled": true,
     "plugins": ["expo-router"],
     "experiments": {
       "typedRoutes": true
