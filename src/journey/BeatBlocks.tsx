@@ -12,9 +12,14 @@ import Svg, { Ellipse, Path } from 'react-native-svg';
 import { journeyTheme } from '@/src/theme/tokens';
 import type { BeatBlock } from './journey-decisions';
 import { resolveBeatPhotoAsset } from './beat-photos';
+import type { SharedValue } from 'react-native-reanimated';
 
 type RevealTextBlock = Extract<BeatBlock, { kind: 'reveal-text' }>;
 type FloatPhotoBlock = Extract<BeatBlock, { kind: 'float-photo' }>;
+
+/** Subtle scroll-linked drift per scroll point, clamped to stay calm. */
+const PARALLAX_FACTOR = 0.08;
+const PARALLAX_MAX = 16;
 
 interface BlockAnimationProps {
   /** Whether the parent Story Beat has revealed through the seam. */
@@ -77,15 +82,25 @@ export function RevealText({
  * Float-photo Beat Block: at most one small local photo per Story Beat,
  * popping or drifting in on scroll. A missing asset degrades to a labeled
  * SVG placeholder instead of crashing; photos are local-only, never remote.
- * Transform and opacity only; parallax here is a translateY entrance, and
- * scroll-linked parallax offset wires in with the full journey assembly.
+ * Transform and opacity only. The pop variant scales in; the parallax
+ * variant rises in plus a small scroll-linked drift from the journey scroll
+ * offset (clamped, no React state per frame, ignored when revealing
+ * instantly).
  */
 export function FloatPhoto({
   block,
   revealed,
   delay,
   instant,
-}: BlockAnimationProps & { block: FloatPhotoBlock }) {
+  scrollY,
+  anchorY,
+}: BlockAnimationProps & {
+  block: FloatPhotoBlock;
+  /** Journey scroll offset driving the parallax drift, if any. */
+  scrollY?: SharedValue<number>;
+  /** Beat top offset anchoring the drift, if any. */
+  anchorY?: number;
+}) {
   const variant = instant ? 'instant' : block.animation;
   const source = resolveBeatPhotoAsset(block.asset);
   const opacity = useSharedValue(0);
@@ -117,10 +132,20 @@ export function FloatPhoto({
     }
   }, [revealed, delay, instant, variant, opacity, scale, translateY]);
 
-  const style = useAnimatedStyle(() => ({
-    opacity: opacity.value,
-    transform: [{ scale: scale.value }, { translateY: translateY.value }],
-  }));
+  const style = useAnimatedStyle(() => {
+    let drift = 0;
+    if (variant === 'parallax' && scrollY !== undefined) {
+      const raw = (scrollY.value - (anchorY ?? 0)) * PARALLAX_FACTOR;
+      drift = Math.max(-PARALLAX_MAX, Math.min(PARALLAX_MAX, raw));
+    }
+    return {
+      opacity: opacity.value,
+      transform: [
+        { scale: scale.value },
+        { translateY: translateY.value + drift },
+      ],
+    };
+  });
 
   return (
     <Animated.View
