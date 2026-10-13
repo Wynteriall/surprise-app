@@ -31,4 +31,10 @@
   Deferred with rationale: haptic toggle UI stays with ticket 05, line
   stagger is timing-based per the transform-and-opacity-only budget, beat
   reduced-motion stays with tickets 04/05.
+- Re-review (Standards + Spec) follow-ups: `reduceMotionChanged`
+  subscription in `app/index.tsx`, stable `DrawnLineSpec` ids, dropped the
+  gate-press passthrough, documented the Skia guard as a
+  dependency-constraint test. Remaining notes accepted as-is: "Bloom
+  Sequence"/"static bloom" match the frozen seam plus ticket wording, and
+  per-stage dwell keys stay explicit. Gates re-green (31/31).
 - Owed to human: on-device Expo Go visual plus FPS feel check.

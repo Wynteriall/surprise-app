@@ -127,6 +127,9 @@ describe('Tulip Hero gated bloom (external behavior)', () => {
   });
 
   test('Tulip Hero never reaches for Skia or images', () => {
+    // Dependency-constraint guard, not a behavior test: it locks the
+    // ticket's costliest mistake (Skia/image flower) out of every future
+    // edit to these files. Behavior stays covered by the tests above.
     const sources = [
       '../TulipHero.tsx',
       '../useHeroSequence.ts',

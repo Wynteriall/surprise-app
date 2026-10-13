@@ -253,18 +253,28 @@ function DrawnLineArt({ d, stroke }: { d: string; stroke: string }) {
   );
 }
 
-const DRAWN_LINES: { d: string; stroke: string; delay: number }[] = [
+interface DrawnLineSpec {
+  id: string;
+  d: string;
+  stroke: string;
+  delay: number;
+}
+
+const DRAWN_LINES: DrawnLineSpec[] = [
   {
+    id: 'hero-line-1',
     d: 'M28 262 C 70 256, 130 256, 172 262',
     stroke: journeyTheme.colors.textRose,
     delay: 200,
   },
   {
+    id: 'hero-line-2',
     d: 'M44 278 C 80 273, 120 273, 156 278',
     stroke: journeyTheme.colors.glow,
     delay: 380,
   },
   {
+    id: 'hero-line-3',
     d: 'M62 294 C 88 290, 112 290, 138 294',
     stroke: journeyTheme.colors.textRose,
     delay: 560,
@@ -313,10 +323,6 @@ export function TulipHero({
     opacity: gateOpacity.value,
   }));
 
-  const onGatePress = () => {
-    handleGatePress();
-  };
-
   if (preferences.reducedMotion) {
     return (
       <View
@@ -332,10 +338,10 @@ export function TulipHero({
               {entry.node}
             </View>
           ))}
-          {DRAWN_LINES.map((line, index) => (
+          {DRAWN_LINES.map((line) => (
             <View
-              key={line.d}
-              testID={`hero-line-${index + 1}`}
+              key={line.id}
+              testID={line.id}
               style={styles.layer}
               pointerEvents="none"
             >
@@ -394,10 +400,10 @@ export function TulipHero({
         >
           <BloomArt />
         </HeroLayer>
-        {DRAWN_LINES.map((line, index) => (
+        {DRAWN_LINES.map((line) => (
           <HeroLayer
-            key={line.d}
-            testID={`hero-line-${index + 1}`}
+            key={line.id}
+            testID={line.id}
             visible={bloomVisible}
             fromY={10}
             delay={line.delay}
@@ -411,7 +417,7 @@ export function TulipHero({
               testID="hero-gate-press"
               accessibilityRole="button"
               accessibilityLabel="Click Me to start the bloom"
-              onPress={onGatePress}
+              onPress={handleGatePress}
               style={styles.gateButton}
             >
               <Text style={styles.gateText}>Click Me</Text>

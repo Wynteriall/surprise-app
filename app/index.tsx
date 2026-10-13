@@ -21,8 +21,17 @@ export default function JourneyIndex() {
         }
       })
       .catch(() => {});
+    const subscription = AccessibilityInfo.addEventListener(
+      'reduceMotionChanged',
+      (enabled) => {
+        if (mounted) {
+          setReducedMotion(enabled);
+        }
+      },
+    );
     return () => {
       mounted = false;
+      subscription.remove();
     };
   }, []);
 
